@@ -45,6 +45,7 @@ public class CBreadcrumbControl: UIControl{
 
     public var containerView: UIView!
     public var startButton: UIButton!
+    public var isButtonHeightFlexible = false
     
     var color: UIColor = UIColor.blue
     private var _animating: Bool = false
@@ -158,6 +159,14 @@ public class CBreadcrumbControl: UIControl{
     }
 
     
+    func buttonHeight() -> CGFloat {
+        if self.isButtonHeightFlexible {
+            return self.frame.size.height
+        } else {
+            return kBreadcrumbHeight
+        }
+    }
+    
     func initialSetup( refresh: Bool) {
         
         var changeRoot: Int = 0
@@ -168,7 +177,7 @@ public class CBreadcrumbControl: UIControl{
             changeRoot = 2
         }
         if (self.containerView == nil ) {
-            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size: CGSize(width: self.bounds.size.width - (kStartButtonWidth+1), height: kBreadcrumbHeight))
+            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size: CGSize(width: self.bounds.size.width - (kStartButtonWidth+1), height: self.buttonHeight()))
             self.containerView = UIView(frame:rectContainerView)
             self.containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             
@@ -183,12 +192,12 @@ public class CBreadcrumbControl: UIControl{
         
         if (changeRoot == 1) {
             self.addSubview( self.startButton)
-            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size:CGSize(width:self.bounds.size.width - (kStartButtonWidth+1), height:kBreadcrumbHeight))
+            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size:CGSize(width:self.bounds.size.width - (kStartButtonWidth+1), height:self.buttonHeight()))
             self.containerView.frame = rectContainerView
         } else if (changeRoot == 2) {
             self.startButton.removeFromSuperview()
             self.startButton = nil
-            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:self.bounds.size.width, height:kBreadcrumbHeight))
+            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:self.bounds.size.width, height:self.buttonHeight()))
             self.containerView.frame = rectContainerView
         }
         
@@ -203,7 +212,7 @@ public class CBreadcrumbControl: UIControl{
         button.backgroundColor = backgroundRootButtonColor
         let bgImage : UIImage = UIImage(named: "button_start", in:Bundle(for: type(of: self)), compatibleWith: nil)!
         button.setBackgroundImage( bgImage, for: UIControlState.normal)
-        button.frame = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:kStartButtonWidth+1, height:kBreadcrumbHeight))
+        button.frame = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:kStartButtonWidth+1, height:self.buttonHeight()))
         button.addTarget(self, action: #selector(self.pressed), for: .touchUpInside)
 
         return button
@@ -251,7 +260,7 @@ public class CBreadcrumbControl: UIControl{
         button.sizeToFit()
         let rectButton:CGRect = button.frame
         let widthButton: CGFloat = (position > 0) ? rectButton.width + 32 + kBreadcrumbCover : rectButton.width + 32
-        button.frame = CGRect(origin:CGPoint(x:0, y:0), size:CGSize(width:widthButton , height:kBreadcrumbHeight))
+        button.frame = CGRect(origin:CGPoint(x:0, y:0), size:CGSize(width:widthButton , height:self.buttonHeight()))
         button.titleEdgeInsets = (position > 0) ? UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) : UIEdgeInsets(top: 0.0, left: -kBreadcrumbCover, bottom: 0.0, right: 0.0)
         button.addTarget(self, action: #selector(self.pressed), for: .touchUpInside)
         
