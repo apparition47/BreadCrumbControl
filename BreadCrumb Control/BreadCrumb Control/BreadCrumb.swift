@@ -77,6 +77,11 @@ public class CBreadcrumbControl: UIControl{
         }
     }
     
+    @IBInspectable public var buttonFont: UIFont = UIFont.boldSystemFont(ofSize: 16) {
+        didSet{
+            initialSetup( refresh: true)
+        }
+    }
     
     @IBInspectable public var textBCColor: UIColor = UIColor.black {
         didSet{
@@ -252,7 +257,7 @@ public class CBreadcrumbControl: UIControl{
             button.arrowColor = self.arrowColor
         }
         button.contentMode = UIViewContentMode.center
-        button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 16)
+        button.titleLabel!.font = self.buttonFont
         button.setTitle(item, for:UIControlState.normal)
         button.setTitleColor( textBCColor, for: UIControlState.normal)
         button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
