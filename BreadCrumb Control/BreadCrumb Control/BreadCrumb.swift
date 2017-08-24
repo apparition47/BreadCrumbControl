@@ -14,7 +14,7 @@ enum OperatorItem {
     case removeItem
 }
 
-enum StyleBreadCrumb {
+public enum StyleBreadCrumb {
     case defaultFlatStyle
     case gradientFlatStyle
 }
@@ -63,7 +63,7 @@ public class CBreadcrumbControl: UIControl{
     }
     
     
-    @IBInspectable var style: StyleBreadCrumb = .gradientFlatStyle {
+    @IBInspectable public var style: StyleBreadCrumb = .gradientFlatStyle {
         didSet{
             initialSetup( refresh: true)
         }
