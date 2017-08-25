@@ -45,7 +45,6 @@ public class CBreadcrumbControl: UIControl{
 
     public var containerView: UIView!
     public var startButton: UIButton!
-    public var isButtonHeightFlexible = false
     
     var color: UIColor = UIColor.blue
     private var _animating: Bool = false
@@ -78,6 +77,12 @@ public class CBreadcrumbControl: UIControl{
     }
     
     @IBInspectable public var buttonFont: UIFont = UIFont.boldSystemFont(ofSize: 16) {
+        didSet{
+            initialSetup( refresh: true)
+        }
+    }
+    
+    @IBInspectable public var isButtonHeightFlexible = false {
         didSet{
             initialSetup( refresh: true)
         }
