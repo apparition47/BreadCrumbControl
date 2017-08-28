@@ -90,7 +90,7 @@ public class CBreadcrumbControl: UIScrollView {
         }
     }
     
-    @IBInspectable public var isButtonHeightFlexible = false {
+    @IBInspectable public var isButtonHeightFlexible: Bool = false {
         didSet{
             initialSetup( refresh: true)
         }
