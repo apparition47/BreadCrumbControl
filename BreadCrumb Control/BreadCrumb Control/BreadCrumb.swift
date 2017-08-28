@@ -182,7 +182,7 @@ public class CBreadcrumbControl: UIScrollView {
     }
 
     
-    func buttonHeight() -> CGFloat {
+    private var buttonHeight: CGFloat {
         if self.isButtonHeightFlexible {
             return self.frame.size.height
         } else {
@@ -199,7 +199,7 @@ public class CBreadcrumbControl: UIScrollView {
             changeRoot = 2
         }
         if (self.containerView == nil ) {
-            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size: CGSize(width: self.bounds.size.width - (kStartButtonWidth+1), height: self.buttonHeight()))
+            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size: CGSize(width: self.bounds.size.width - (kStartButtonWidth+1), height: self.buttonHeight))
             self.containerView = UIView(frame:rectContainerView)
             self.containerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.clipsToBounds = true
@@ -215,12 +215,12 @@ public class CBreadcrumbControl: UIScrollView {
         
         if (changeRoot == 1) {
             self.addSubview( self.startButton)
-            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size:CGSize(width:self.bounds.size.width - (kStartButtonWidth+1), height:self.buttonHeight()))
+            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:kStartButtonWidth+1, y:0), size:CGSize(width:self.bounds.size.width - (kStartButtonWidth+1), height:self.buttonHeight))
             self.containerView.frame = rectContainerView
         } else if (changeRoot == 2) {
             self.startButton.removeFromSuperview()
             self.startButton = nil
-            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:self.bounds.size.width, height:self.buttonHeight()))
+            let rectContainerView: CGRect = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:self.bounds.size.width, height:self.buttonHeight))
             self.containerView.frame = rectContainerView
         }
         
@@ -234,7 +234,7 @@ public class CBreadcrumbControl: UIScrollView {
         button.backgroundColor = backgroundRootButtonColor
         let bgImage : UIImage = UIImage(named: "button_start", in:Bundle(for: type(of: self)), compatibleWith: nil)!
         button.setBackgroundImage( bgImage, for: UIControlState.normal)
-        button.frame = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:kStartButtonWidth+1, height:self.buttonHeight()))
+        button.frame = CGRect(origin: CGPoint(x:0, y:0), size:CGSize(width:kStartButtonWidth+1, height:self.buttonHeight))
         button.addTarget(self, action: #selector(self.pressed), for: .touchUpInside)
 
         return button
@@ -282,7 +282,7 @@ public class CBreadcrumbControl: UIScrollView {
         button.sizeToFit()
         let rectButton:CGRect = button.frame
         let widthButton: CGFloat = (position > 0) ? rectButton.width + 32 + kBreadcrumbCover : rectButton.width + 32
-        button.frame = CGRect(origin:CGPoint(x:0, y:0), size:CGSize(width:widthButton , height:self.buttonHeight()))
+        button.frame = CGRect(origin:CGPoint(x:0, y:0), size:CGSize(width:widthButton , height:self.buttonHeight))
         button.titleEdgeInsets = (position > 0) ? UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) : UIEdgeInsets(top: 0.0, left: -kBreadcrumbCover, bottom: 0.0, right: 0.0)
         button.addTarget(self, action: #selector(self.pressed), for: .touchUpInside)
         
