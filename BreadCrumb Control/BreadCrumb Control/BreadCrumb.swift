@@ -5,7 +5,6 @@
 import UIKit
 
 let kStartButtonWidth:CGFloat = 44
-let kBreadcrumbHeight:CGFloat = 44
 let kBreadcrumbCover:CGFloat = 15
 
 
@@ -85,12 +84,6 @@ public class CBreadcrumbControl: UIScrollView {
     }
     
     @IBInspectable public var buttonFont: UIFont = UIFont.boldSystemFont(ofSize: 16) {
-        didSet{
-            initialSetup( refresh: true)
-        }
-    }
-    
-    @IBInspectable public var isButtonHeightFlexible: Bool = false {
         didSet{
             initialSetup( refresh: true)
         }
@@ -181,13 +174,8 @@ public class CBreadcrumbControl: UIScrollView {
         return false
     }
 
-    
     private var buttonHeight: CGFloat {
-        if self.isButtonHeightFlexible {
-            return self.frame.size.height
-        } else {
-            return kBreadcrumbHeight
-        }
+        return self.frame.size.height
     }
     
     func initialSetup( refresh: Bool) {
