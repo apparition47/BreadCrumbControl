@@ -18,7 +18,16 @@ public enum StyleBreadCrumb {
     case gradientFlatStyle
 }
 
-class ItemEvolution {
+protocol BreadCrumbControlDelegate: class {
+    func buttonPressed(index: Int, item: String)
+}
+
+extension BreadCrumbControlDelegate {
+    func buttonPressed(index: Int, item: String) {
+    }
+}
+
+fileprivate class ItemEvolution {
     var itemLabel: String = ""
     var operationItem: OperatorItem = OperatorItem.addItem
     var offsetX: CGFloat = 0.0
@@ -29,61 +38,33 @@ class ItemEvolution {
     }
 }
 
-class EventItem {
+fileprivate class EventItem {
     var itemsEvolution: [ItemEvolution]!
 }
 
-protocol BreadCrumbControlDelegate: class {
-    func buttonPressed(index: Int, item: String)
-}
-
-extension BreadCrumbControlDelegate {
-    func buttonPressed(index: Int, item: String) {
-    }
-}
-
-
 @IBDesignable
 public class CBreadcrumbControl: UIScrollView {
-    weak var breadCrumbDelegate: BreadCrumbControlDelegate?
+    
+    // MARK: - Internal properties
     
     var _items: [String] = []
     public var _itemViews: [UIButton] = []
 
     public var containerView: UIView!
     public var startButton: UIButton!
-    
-    var color: UIColor = UIColor.blue
+
     private var _animating: Bool = false
    
     private var animationInProgress: Bool = false
     
     // used if you send a new itemsBreadCrumb when "animationInProgress == true"
     private var itemsBCInWaiting: Bool = false
-
-    // item selected
-    public var itemClicked: String!
-    public var itemPositionClicked: Int = -1
-
-    func register() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.receivedUINotificationNewItems), name:NSNotification.Name(rawValue: "NotificationNewItems"), object: nil)
-    }
+    
+    // MARK: - Customizable properties. (Available for Interface Builder)
     
     @IBInspectable public var autoScrollEnabled: Bool = false
     
-    @IBInspectable public var style: StyleBreadCrumb = .gradientFlatStyle {
-        didSet{
-            initialSetup( refresh: true)
-        }
-    }
-    
     @IBInspectable public var visibleRootButton: Bool = true {
-        didSet{
-            initialSetup( refresh: true)
-        }
-    }
-    
-    @IBInspectable public var buttonFont: UIFont = UIFont.boldSystemFont(ofSize: 16) {
         didSet{
             initialSetup( refresh: true)
         }
@@ -133,19 +114,6 @@ public class CBreadcrumbControl: UIScrollView {
             initialSetup( refresh: true)
         }
     }
-
-    
-    @IBInspectable public var itemsBreadCrumb: [String] = [] {
-        didSet{
-            if (!self.animationInProgress) {
-                self.itemClicked = ""
-                self.itemPositionClicked = -1
-                initialSetup( refresh: false)
-            } else {
-                itemsBCInWaiting = true
-            }
-        }
-    }
     
     @IBInspectable public var iconSize: CGSize = CGSize(width:20, height:20){
         didSet{
@@ -153,6 +121,38 @@ public class CBreadcrumbControl: UIScrollView {
             initialSetup( refresh: true)
         }
     }
+    
+    // MARK: - Customizable properties.
+    
+    public var style: StyleBreadCrumb = .gradientFlatStyle {
+        didSet{
+            initialSetup( refresh: true)
+        }
+    }
+    
+    public var buttonFont: UIFont = UIFont.boldSystemFont(ofSize: 16) {
+        didSet{
+            initialSetup( refresh: true)
+        }
+    }
+    
+    // MARK: - Delegates
+    
+    weak var breadCrumbDelegate: BreadCrumbControlDelegate?
+    
+    // MARK: Updating items
+    
+    @IBInspectable public var itemsBreadCrumb: [String] = [] {
+        didSet{
+            if (!self.animationInProgress) {
+                initialSetup( refresh: false)
+            } else {
+                itemsBCInWaiting = true
+            }
+        }
+    }
+    
+    // MARK: - initializers
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -165,6 +165,13 @@ public class CBreadcrumbControl: UIScrollView {
         super.init(frame: frame)
         register()
         initialSetup( refresh: true)
+    }
+    
+    func register() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.receivedUINotificationNewItems),
+                                               name:NSNotification.Name(rawValue: "NotificationNewItems"),
+                                               object: nil)
     }
     
     override public func touchesShouldCancel(in view: UIView) -> Bool {
@@ -281,25 +288,20 @@ public class CBreadcrumbControl: UIScrollView {
     
     
     func pressed(sender: UIButton!) {
-        let titleSelected = sender.titleLabel?.text
         if ((self.startButton != nil) && (self.startButton == sender)) {
-            self.itemClicked = ""
-            self.itemPositionClicked = 0
+            self.breadCrumbDelegate?.buttonPressed(index: 0, item: "")
         } else {
-            self.itemClicked = titleSelected
-            for idx: Int in 0 ..< _items.count {
-                if (titleSelected == _items[idx]) {
-                    self.itemPositionClicked = idx + 1
-                }
+            if let clickedButtonTitle = sender.titleLabel?.text,
+                let index = self._items.index(of: clickedButtonTitle) {
+                self.breadCrumbDelegate?.buttonPressed(index: index + 1, item: clickedButtonTitle)
+            } else {
+                self.breadCrumbDelegate?.buttonPressed(index: -1, item: "")
             }
         }
-
-        self.breadCrumbDelegate?.buttonPressed(index: self.itemPositionClicked, item: self.itemClicked)
     }
     
     override open func layoutSubviews() {
         super.layoutSubviews()
-        
         
         var cx: CGFloat = 0  //kStartButtonWidth
         for view: UIView in _itemViews
@@ -367,8 +369,7 @@ public class CBreadcrumbControl: UIScrollView {
         }
     }
     
-    
-    func processItem( itemsEvolution: [ItemEvolution], refresh: Bool) {
+    private func processItem( itemsEvolution: [ItemEvolution], refresh: Bool) {
         //    _itemViews
         if (itemsEvolution.count > 0) {
             var itemsEvolutionToSend: [ItemEvolution] = [ItemEvolution]()
@@ -524,10 +525,7 @@ public class CBreadcrumbControl: UIScrollView {
         self.animationInProgress = false
         if (itemsBCInWaiting == true) {
             itemsBCInWaiting = false
-            self.itemClicked = ""
             initialSetup( refresh: false)
         }
     }
-
-    
 }
