@@ -415,18 +415,20 @@ public class CBreadcrumbControl: UIScrollView {
             _items.append( label)
 
             if !refresh {
-                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [unowned self] in
-                    self.sizeToFit()
-                    self.singleLayoutSubviews( view: itemButton, offsetX: endPosition)
-                }, completion: { [unowned self] finished in
-                    self._animating = false
+                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [weak self] in
+                    guard let this = self else { return }
+                    this.sizeToFit()
+                    this.singleLayoutSubviews( view: itemButton, offsetX: endPosition)
+                }, completion: { [weak self] finished in
+                    guard let this = self else { return }
+                    this._animating = false
                     
                     if itemsEvolutionToSend.count == 0 {
-                        var contentSize = self.contentSize
+                        var contentSize = this.contentSize
                         contentSize.width = endPosition + widthButton + kBreadcrumbCover
-                        self.contentSize = contentSize
-                        if self.autoScrollEnabled {
-                            self.setContentOffset(CGPoint(x: endPosition, y: 0), animated: true)
+                        this.contentSize = contentSize
+                        if this.autoScrollEnabled {
+                            this.setContentOffset(CGPoint(x: endPosition, y: 0), animated: true)
                         }
                     }
                     
@@ -435,7 +437,7 @@ public class CBreadcrumbControl: UIScrollView {
                         
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotificationNewItems"), object: eventItem)
                     } else {
-                        self.processIfItemsBreadCrumbInWaiting()  //self.animationInProgress = false
+                        this.processIfItemsBreadCrumbInWaiting()  //self.animationInProgress = false
                     }
                 })
             } else {
@@ -474,23 +476,25 @@ public class CBreadcrumbControl: UIScrollView {
             lastViewShowing.frame = rectUIButton
             
             if !refresh {
-                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [unowned self] in
-                    self.sizeToFit()
-                    self.singleLayoutSubviews( view: lastViewShowing, offsetX: endPosition)
-                }, completion: { [unowned self] finished in
-                    self._animating = false
+                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [weak self] in
+                    guard let this = self else { return }
+                    this.sizeToFit()
+                    this.singleLayoutSubviews( view: lastViewShowing, offsetX: endPosition)
+                }, completion: { [weak self] finished in
+                    guard let this = self else { return }
+                    this._animating = false
                     
                     lastViewShowing.removeFromSuperview()
-                    self._itemViews.removeLast()
-                    self._items.removeLast()
+                    this._itemViews.removeLast()
+                    this._items.removeLast()
 
                     
                     if itemsEvolutionToSend.count == 0 {
-                        var contentSize = self.contentSize
+                        var contentSize = this.contentSize
                         contentSize.width = startPosition + widthButton + kBreadcrumbCover + 500
-                        self.contentSize = contentSize
-                        if self.autoScrollEnabled {
-                            self.setContentOffset(CGPoint(x: endPosition, y: 0), animated: true)
+                        this.contentSize = contentSize
+                        if this.autoScrollEnabled {
+                            this.setContentOffset(CGPoint(x: endPosition, y: 0), animated: true)
                         }
                     }
                     
@@ -499,7 +503,7 @@ public class CBreadcrumbControl: UIScrollView {
                         
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotificationNewItems"), object: eventItem)
                     } else {
-                        self.processIfItemsBreadCrumbInWaiting()  //self.animationInProgress = false
+                        this.processIfItemsBreadCrumbInWaiting()  //self.animationInProgress = false
                     }
                 })
             } else {
