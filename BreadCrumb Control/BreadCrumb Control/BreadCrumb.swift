@@ -147,7 +147,7 @@ public class CBreadcrumbControl: UIScrollView {
     @IBInspectable public var itemsBreadCrumb: [String] = [] {
         didSet{
             if !self.animationInProgress {
-                initialSetup( refresh: false)
+                initialSetup(refresh: false)
             } else {
                 itemsBCInWaiting = true
             }
@@ -166,7 +166,7 @@ public class CBreadcrumbControl: UIScrollView {
     override public init(frame: CGRect) {
         super.init(frame: frame)
         register()
-        initialSetup( refresh: true)
+        initialSetup(refresh: true)
     }
     
     func register() {
@@ -184,13 +184,6 @@ public class CBreadcrumbControl: UIScrollView {
     }
     
     func initialSetup(refresh: Bool) {
-        var changeRoot: Int = 0
-        if visibleRootButton && self.startButton == nil {
-            self.startButton = self.startRootButton()
-            changeRoot = 1
-        } else if visibleRootButton == false && self.startButton != nil {
-            changeRoot = 2
-        }
         if self.containerView == nil {
             let rectContainerView = CGRect(origin: CGPoint(x: kStartButtonWidth + 1, y: 0),
                                            size: CGSize(width: self.bounds.size.width - (kStartButtonWidth + 1), height: self.frame.size.height))
@@ -204,27 +197,25 @@ public class CBreadcrumbControl: UIScrollView {
         }
         guard let containerView = self.containerView else { return }
 
-        containerView.backgroundColor = backgroundBCColor  //UIColor.white
+        containerView.backgroundColor = backgroundBCColor
         
-        if let startButton = self.startButton, visibleRootButton {
-            startButton.backgroundColor = backgroundRootButtonColor
-        }
-        
-        if changeRoot == 1 {
-            if let startButton = self.startButton {
-                self.addSubview(startButton)
-            }
+        if visibleRootButton && self.startButton == nil {
+            let startButton = self.startRootButton()
+            self.startButton = startButton
+            self.addSubview(startButton)
             let rectContainerView = CGRect(origin: CGPoint(x: kStartButtonWidth+1, y: 0),
                                            size: CGSize(width: self.bounds.size.width - (kStartButtonWidth+1), height: self.frame.size.height))
             containerView.frame = rectContainerView
-        } else if changeRoot == 2 {
+        } else if !visibleRootButton && self.startButton != nil {
             self.startButton?.removeFromSuperview()
             self.startButton = nil
             let rectContainerView = CGRect(origin: CGPoint(x: 0, y: 0),
                                            size: CGSize(width: self.bounds.size.width, height: self.frame.size.height))
             containerView.frame = rectContainerView
         }
-        
+        if let startButton = self.startButton, visibleRootButton {
+            startButton.backgroundColor = backgroundRootButtonColor
+        }
         self.setItems(items: self.itemsBreadCrumb, refresh: refresh, containerView: containerView)
     }
 
@@ -320,7 +311,7 @@ public class CBreadcrumbControl: UIScrollView {
             view.frame = CGRect(origin: CGPoint(x: cx, y: 0), size: CGSize(width: s.width, height: s.height))
             cx += s.width
         }
-        initialSetup( refresh: true)
+        initialSetup(refresh: true)
     }
     
     
@@ -540,7 +531,7 @@ public class CBreadcrumbControl: UIScrollView {
         self.animationInProgress = false
         if itemsBCInWaiting {
             itemsBCInWaiting = false
-            initialSetup( refresh: false)
+            initialSetup(refresh: false)
         }
     }
 }
