@@ -13,12 +13,13 @@ public enum StyleBreadCrumb {
 }
 
 protocol BreadCrumbControlDelegate: class {
-    func buttonPressed(index: Int, item: String)
+    func didTouchItem(index: Int, item: String)
+    func didTouchRootButton()
 }
 
 extension BreadCrumbControlDelegate {
-    func buttonPressed(index: Int, item: String) {
-    }
+    func didTouchItem(index: Int, item: String) {}
+    func didTouchRootButton() {}
 }
 
 private enum OperatorItem {
@@ -287,17 +288,13 @@ public class CBreadcrumbControl: UIScrollView {
         return button
     }
     
-    
-    
     func pressed(sender: UIButton!) {
         if self.startButton != nil && self.startButton == sender {
-            self.breadCrumbDelegate?.buttonPressed(index: 0, item: "")
+            self.breadCrumbDelegate?.didTouchRootButton()
         } else {
             if let clickedButtonTitle = sender.titleLabel?.text,
                 let index = self._items.index(of: clickedButtonTitle) {
-                self.breadCrumbDelegate?.buttonPressed(index: index + 1, item: clickedButtonTitle)
-            } else {
-                self.breadCrumbDelegate?.buttonPressed(index: -1, item: "")
+                self.breadCrumbDelegate?.didTouchItem(index: index, item: clickedButtonTitle)
             }
         }
     }
