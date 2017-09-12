@@ -397,6 +397,14 @@ public class CBreadcrumbControl: UIScrollView {
             }
             let label = itemsEvolution[0].itemLabel
             let itemButton = self.itemButton( item: label, position: _itemViews.count)
+            if itemsEvolutionToSend.count == 0 {
+                itemButton.isLast = true
+            }
+            if _itemViews.count >= 1 {
+                if let button = _itemViews[_itemViews.count-1] as? BreadCrumbButton {
+                    button.isLast = false
+                }
+            }
             let widthButton = itemButton.frame.size.width
             startPosition = (_itemViews.count > 0) ? endPosition - widthButton - kBreadcrumbCover : endPosition - widthButton
             var rectUIButton = itemButton.frame
@@ -490,6 +498,11 @@ public class CBreadcrumbControl: UIScrollView {
                     this._itemViews.removeLast()
                     this._items.removeLast()
 
+                    if this._itemViews.count >= 1 {
+                        if let button = this._itemViews[this._itemViews.count-1] as? BreadCrumbButton {
+                            button.isLast = true
+                        }
+                    }
                     
                     if itemsEvolutionToSend.count == 0 {
                         let contentWidth = this._itemViews.reduce(kBreadcrumbCover) { (width, button) in
@@ -517,6 +530,12 @@ public class CBreadcrumbControl: UIScrollView {
                 lastViewShowing.removeFromSuperview()
                 self._itemViews.removeLast()
                 self._items.removeLast()
+                
+                if _itemViews.count >= 1 {
+                    if let button = _itemViews[_itemViews.count-1] as? BreadCrumbButton {
+                        button.isLast = true
+                    }
+                }
                 
                 if itemsEvolutionToSend.count == 0 {
                     let contentWidth = self._itemViews.reduce(kBreadcrumbCover) { (width, button) in
