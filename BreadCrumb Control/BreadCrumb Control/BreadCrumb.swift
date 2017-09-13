@@ -382,7 +382,7 @@ public class CBreadcrumbControl: UIScrollView {
         context.evolutions.remove(at: 0)
         
         let frame = self.frame
-        let enabledAnimation = !refresh && (self.animationSpeed > 1e-15)
+        let enabledAnimation = !refresh && (self.animationSpeed > 0)
 
         if currentEvolution.operationItem == .add {
             //create a new UIButton
@@ -416,8 +416,7 @@ public class CBreadcrumbControl: UIScrollView {
             context.items.append( label)
 
             if enabledAnimation {
-                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [weak self] in
-                    guard let this = self else { return }
+                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: {
                     CBreadcrumbControl.addOffset(to: itemButton, offsetX: endPosition)
                 }, completion: { [weak self] finished in
                     guard let this = self else { return }
@@ -480,8 +479,7 @@ public class CBreadcrumbControl: UIScrollView {
             lastViewShowing.frame = rectUIButton
             
             if enabledAnimation {
-                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [weak self] in
-                    guard let this = self else { return }
+                UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: {
                     CBreadcrumbControl.addOffset(to: lastViewShowing, offsetX: endPosition)
                 }, completion: { [weak self] finished in
                     guard let this = self else { return }
