@@ -409,24 +409,21 @@ public class CBreadcrumbControl: UIScrollView {
                 UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [weak self] in
                     guard let this = self else { return }
                     CBreadcrumbControl.addOffset(to: itemButton, offsetX: endPosition)
+                    
+                    let contentWidth = context.itemViews.reduce(kBreadcrumbCover) { (width, button) in
+                        return width + button.frame.size.width - kBreadcrumbCover
+                    }
+                    let contentSize = CGSize(width: contentWidth, height: this.contentSize.height)
+                    this.contentSize = contentSize
+                    if this.autoScrollEnabled {
+                        this.setContentOffset(CGPoint(x: max(0, contentWidth - frame.size.width), y: 0), animated: false)
+                    }
+                    if let containerView = this.containerView {
+                        containerView.frame = CGRect(origin: containerView.frame.origin, size: contentSize)
+                    }
                 }, completion: { [weak self] finished in
                     guard let this = self else { return }
                     this._animating = false
-                    
-                    if context.evolutions.count == 0 {
-                        let contentWidth = context.itemViews.reduce(kBreadcrumbCover) { (width, button) in
-                            return width + button.frame.size.width - kBreadcrumbCover
-                        }
-                        let contentSize = CGSize(width: contentWidth, height: this.contentSize.height)
-
-                        this.contentSize = contentSize
-                        if this.autoScrollEnabled {
-                            this.setContentOffset(CGPoint(x: max(0, contentWidth - frame.size.width), y: 0), animated: true)
-                        }
-                        if let containerView = this.containerView {
-                            containerView.frame = CGRect(origin: containerView.frame.origin, size: contentSize)
-                        }
-                    }
                     
                     let eventItem = EventItem(context: context)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotificationNewItems"), object: eventItem)
@@ -473,6 +470,18 @@ public class CBreadcrumbControl: UIScrollView {
                 UIView.animate( withDuration: self.animationSpeed, delay: 0, options:[.curveEaseInOut], animations: { [weak self] in
                     guard let this = self else { return }
                     CBreadcrumbControl.addOffset(to: lastViewShowing, offsetX: endPosition)
+                    
+                    let contentWidth = context.itemViews.reduce(kBreadcrumbCover) { (width, button) in
+                        return width + button.frame.size.width - kBreadcrumbCover
+                    }
+                    let contentSize = CGSize(width: contentWidth, height: this.contentSize.height)
+                    this.contentSize = contentSize
+                    if let containerView = this.containerView {
+                        containerView.frame = CGRect(origin: containerView.frame.origin, size: contentSize)
+                    }
+                    if this.autoScrollEnabled {
+                        this.setContentOffset(CGPoint(x: max(0, contentWidth - frame.size.width), y: 0), animated: false)
+                    }
                 }, completion: { [weak self] finished in
                     guard let this = self else { return }
                     this._animating = false
@@ -481,17 +490,6 @@ public class CBreadcrumbControl: UIScrollView {
                     context.itemViews.removeLast()
                     context.items.removeLast()
 
-                    if context.evolutions.count == 0 {
-                        let contentWidth = context.itemViews.reduce(kBreadcrumbCover) { (width, button) in
-                            return width + button.frame.size.width - kBreadcrumbCover
-                        }
-                        let contentSize = CGSize(width: contentWidth, height: this.contentSize.height)
-                        this.contentSize = contentSize
-                        if this.autoScrollEnabled {
-                            this.setContentOffset(CGPoint(x: max(0, contentWidth - frame.size.width), y: 0), animated: true)
-                        }
-                    }
-                    
                     let eventItem = EventItem(context: context)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "NotificationNewItems"), object: eventItem)
 
