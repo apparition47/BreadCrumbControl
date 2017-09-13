@@ -483,7 +483,7 @@ public class CBreadcrumbControl: UIScrollView {
                     
                     let contentWidth = context.itemViews.reduce(kBreadcrumbCover) { (width, button) in
                         return width + button.frame.size.width - kBreadcrumbCover
-                    }
+                    } - lastViewShowing.frame.size.width
                     let contentSize = CGSize(width: contentWidth, height: this.contentSize.height)
                     this.contentSize = contentSize
                     if let containerView = this.containerView {
