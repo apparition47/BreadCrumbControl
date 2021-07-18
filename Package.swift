@@ -11,11 +11,13 @@ let package = Package(
             name: "BreadCrumbControl",
             targets: ["BreadCrumbControl"]),
     ],
+    dependencies: [
+    ],
     targets: [
         .target(
             name: "BreadCrumbControl",
             resources: [
-                .copy("Resources"),
+                .copy("Resources/BreadCrumbControl.xcassets"),
             ]),
     ]
 )

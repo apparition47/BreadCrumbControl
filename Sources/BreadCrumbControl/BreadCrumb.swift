@@ -12,7 +12,7 @@ public enum StyleBreadCrumb {
     case gradientFlatStyle
 }
 
-public protocol BreadCrumbControlDelegate: class {
+public protocol BreadCrumbControlDelegate: AnyObject {
     func didTouchItem(index: Int, item: String)
     func didTouchRootButton()
 }
