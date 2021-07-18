@@ -1,0 +1,21 @@
+// swift-tools-version:5.3
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+    name: "BreadCrumbControl",
+    platforms: [.iOS(.v11)],
+    products: [
+        .library(
+            name: "BreadCrumbControl",
+            targets: ["BreadCrumbControl"]),
+    ],
+    targets: [
+        .target(
+            name: "BreadCrumbControl",
+            resources: [
+                .copy("Resources"),
+            ]),
+    ]
+)

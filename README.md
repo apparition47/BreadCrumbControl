@@ -21,7 +21,7 @@ This control is compatible with iOS 10. Swift 5 compatible. Use [0.1.1](https://
 
 ## Manually
 
-Add to your iOS project: `BreadCrumb.swift`, `CustomButton.swift`, `BreadCrumbs.xcassets`.
+Add to your iOS project: `BreadCrumb.swift`, `CustomButton.swift`, `BreadCrumbControl.xcassets`.
 
 ## CocoaPods
 
@@ -50,6 +50,11 @@ Add the following into your `Cartfile`, then run `carthage update`.
 ```
 github "apparition47/BreadCrumbControl"
 ```
+
+## Swift Package Manager
+
+Add `https://github.com/apparition47/BreadCrumbControl.git` to your project.
+
 
 # Usage
 

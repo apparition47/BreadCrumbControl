@@ -241,7 +241,11 @@ public class CBreadcrumbControl: UIScrollView {
     {
         let button = UIButton(type: .custom) as UIButton
         button.backgroundColor = backgroundRootButtonColor
-        guard let bgImage = UIImage(named: "button_start", in: Bundle(for: type(of: self)), compatibleWith: nil) else {
+        
+        guard let podBundleURL = Bundle(for: type(of: self)).url(forResource: "BreadCrumbControl", withExtension: "bundle"/*xcassets*/),
+              let podBundle = Bundle(url: podBundleURL),
+              let bgImage = UIImage(named: "breadCrumb", in: podBundle, compatibleWith: nil)
+        else {
             fatalError("Root button's image is not created")
         }
         button.setBackgroundImage(bgImage, for: .normal)
