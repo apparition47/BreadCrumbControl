@@ -244,7 +244,8 @@ public class CBreadcrumbControl: UIScrollView {
         
         #if SWIFT_PACKAGE
             let resourceBundle = Bundle.module
-        #else // cocoapods
+        #else
+            // cocoapods OR manually embedded in host app
             let podBundleURL = Bundle(for: type(of: self)).url(forResource: "BreadCrumbControl", withExtension: "bundle"/*xcassets*/) ?? Bundle.main.bundleURL
             let resourceBundle = Bundle(url: podBundleURL)
         #endif
